@@ -1,0 +1,36 @@
+🥉 Challenge 1: The Interrogator (Testing readline)
+Goal: Practice setting up standard input/output and handling asynchronous callbacks.
+
+The Task:
+Create a file called exercise1.js.
+Import the readline module and create your interface.
+Ask the user: "What is your favorite programming language?"
+When they answer, log a message to the terminal saying: "[Their Answer] is a great choice!"
+Ensure the program completely closes after the answer is printed.
+
+
+
+🥈 Challenge 2: The Backup Generator (Testing fs Sync Methods)
+Goal: Practice synchronous file writing, reading, and error handling.
+
+The Task:
+Create a file called exercise2.js.
+Import the fs module.
+Create a variable containing a simple string, like "Important system backup data."
+Use a try/catch block to synchronously write that string into a new file called backup.txt.
+Right below that, use another try/catch block to synchronously read backup.txt and console.log its contents to the screen to prove it worked.
+
+
+
+🥇 Challenge 3: The Event Guest Logger (The Ultimate Test)
+Goal: Combine your knowledge of the Waiter (readline) and the Power Drill (fs).
+
+The Task:
+Create a file called exercise3.js.
+Import both the readline and fs modules.
+Use readline to ask the user: "Enter the name of the new event guest: "
+Inside the callback function (after the user hits enter), take their name and use fs.writeFileSync() to save their name into a file called guestlist.txt.
+After the file is written, close the readline interface.
+
+
+Bonus points: Wrap your writeFileSync in a try/catch block so your app doesn't crash if something goes wrong with the hard drive!
