@@ -6,7 +6,7 @@ const port = 8000;
 // Create an HTTP server that listens for incoming requests and sends a response
 const server = http.createServer((req, res) => {
   console.log("A new request received.....");
-  if (req.url === "/" || req.url === "/index.html") {
+  if (req.url === "/" || req.url === "/home") {
     // Read the index.html file and send its content as the response
     fs.readFile("./index.html", "utf-8", (err, data) => {
       if (err) {
