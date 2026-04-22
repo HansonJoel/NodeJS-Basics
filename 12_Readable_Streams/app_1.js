@@ -12,8 +12,7 @@ server.on("request", (req, res) => {
 
   myReadStream.on("data", function (chunk) {
     console.log("New chuck received");
-    res.write(chunk);    // this is how we send data to the client in chunks. We write the chunk to the response stream.
-    res.end();
+    res.write(chunk); // this is how we send data to the client in chunks. We write the chunk to the response stream.
   });
 
   myReadStream.on("end", () => {
