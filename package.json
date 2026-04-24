@@ -1,0 +1,11 @@
+{
+  "name": "nodejs-basic",
+  "version": "1.0.0",
+  "description": "My Node.js learning project",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
