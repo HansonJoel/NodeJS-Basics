@@ -8,7 +8,7 @@ hotelRouter.param("id", hotelsController.checkHotelExist);
 hotelRouter
   .route("/")
   .get(hotelsController.getAll)
-  .post(hotelsController.create);
+  .post(hotelsController.validatePostBody, hotelsController.create);
 
 hotelRouter
   .route("/:id")

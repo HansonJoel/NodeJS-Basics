@@ -4,6 +4,7 @@ const { parse } = require("path");
 
 let hotels = JSON.parse(fs.readFileSync("./data/hotels.json", "utf8")); // Read the hotels data which is stored in javscript objects and converted it to JSON file
 
+// Middleware function to check if a hotel with the specified ID exists
 const checkHotelExist = (req, res, next, value) => {
   const hotelIndex = hotels.findIndex((h) => h.id === +value); // Find the index of the hotel with the matching value
 
@@ -13,6 +14,31 @@ const checkHotelExist = (req, res, next, value) => {
       message: `Hotel with the specified ID ${value} is not found`,
     });
   }
+  next();
+};
+
+// Middleware function to validate the request body for creating a new hotel
+const validatePostBody = (req, res, next) => {
+  const body = req.body;
+
+  // IF the body itself is missing OR any of the required fields are missing
+  if (
+    !body ||
+    !body.name ||
+    !body.type ||
+    !body.rating ||
+    !body.city ||
+    !body.country ||
+    !body.price
+  ) {
+    // STOP the request and return the error
+    return res.status(400).json({
+      status: "error",
+      message: "Invalid hotel data provided. Missing required fields.",
+    });
+  }
+
+  // If we make it down here, all the required fields exist! Let them through.
   next();
 };
 // Controller function to get all hotels
@@ -133,6 +159,7 @@ const deleteHotel = (req, res) => {
 
 module.exports = {
   checkHotelExist,
+  validatePostBody,
   getAll,
   create,
   getByID,
