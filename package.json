@@ -2,7 +2,9 @@
   "name": "nodejs-basic",
   "version": "1.0.0",
   "description": "My Node.js learning project",
+  "type": "commonjs",
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.6.1",
     "morgan": "^1.10.1"
