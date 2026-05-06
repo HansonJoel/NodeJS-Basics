@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 const app = require("./app");
 
 // connecting to MongoDB
-const mongoURL =
-  "mongodb+srv://admin:test1234@cluster0.itpxmtu.mongodb.net/?appName=Cluster0";
+const mongoURL = process.env.mongoURL;
 
 const connectDB = async () => {
   try {
