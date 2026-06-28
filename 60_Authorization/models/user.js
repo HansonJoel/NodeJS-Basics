@@ -62,15 +62,15 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// userSchema.methods.isPasswordChanged = function (tokenIssuedAt) {
-//   if (this.passwordChangedAt) {
-//     const passwordChangedAtInSeconds = parseInt(
-//       this.passwordChangedAt.getTime() / 1000,
-//       10,
-//     );
-//     return passwordChangedAtInSeconds > tokenIssuedAt;
-//   }
-//   return false;
-// };
+userSchema.methods.isPasswordChanged = async function (tokenIssuedAt) {
+  if (this.passwordChangedAt) {
+    const passwordChangedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10,
+    );
+    return tokenIssuedAt < passwordChangedTimestamp;
+  }
+  return false;
+};
 
 module.exports = mongoose.model("user", userSchema);

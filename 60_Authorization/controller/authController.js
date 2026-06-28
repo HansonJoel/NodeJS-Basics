@@ -104,6 +104,15 @@ exports.isAuthenticated = catchAsync(async (req, res, next) => {
   }
 
   // 4. check if the user's password was changed after the token was issued
+  const passwordWasChanged = await user.isPasswordChanged(decodedToken.iat);
+
+  if (passwordWasChanged) {
+    const error = new AppError("Password was changed. Please login again", 401);
+    return next(error);
+  }
+
+  // 5. Every check is successful, allow accesss rto protected route
+  req.user = user;
 
   next();
 });
