@@ -49,22 +49,26 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+// Hashing the password before saving it to the database
 userSchema.pre("save", async function () {
   // skip hashing if password is not modified
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password")) return;
   // hashing the password before saving it to the database
 
   this.password = await bcrypt.hash(this.password, 10); // using the salt 10
   this.confirmPassword = undefined;
 });
 
+// Compare the provided password with the hashed password in the database
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
+// Check if the password was changed after the token was issued
 userSchema.methods.isPasswordChanged = async function (tokenIssuedAt) {
   if (this.passwordChangedAt) {
     const passwordChangedTimestamp = parseInt(
+      // returns the time stamp in seconds when the password was changed
       this.passwordChangedAt.getTime() / 1000,
       10,
     );

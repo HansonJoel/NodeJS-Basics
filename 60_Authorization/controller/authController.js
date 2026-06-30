@@ -13,11 +13,14 @@ const signToken = (userId) => {
   });
 };
 
+// User Signup
 exports.signUp = catchAsync(async (req, res, next) => {
   const newUser = await User.create(req.body);
 
   // Generating a JWT token for the newly created user
   const token = signToken(newUser._id);
+
+  newUser.password = undefined; // remove password from the response
 
   res.status(201).json({
     status: "success",
@@ -28,6 +31,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
   });
 });
 
+// User Login
 exports.login = catchAsync(async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -72,6 +76,7 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
+// Middleware to protect routes and ensure user is authenticated
 exports.isAuthenticated = catchAsync(async (req, res, next) => {
   // 1. Read access token from the request header
   const testToken = req.headers.Authorization || req.headers.authorization;
@@ -94,7 +99,7 @@ exports.isAuthenticated = catchAsync(async (req, res, next) => {
 
   // 2. Verify if the token is valid and not expired
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-  console.log("Decoded Token:", decodedToken);
+  // console.log("Decoded Token:", decodedToken);
 
   // 3. if token is valid, check if the user still exists in the database
   const user = await User.findById(decodedToken.userId);
@@ -111,7 +116,7 @@ exports.isAuthenticated = catchAsync(async (req, res, next) => {
     return next(error);
   }
 
-  // 5. Every check is successful, allow accesss rto protected route
+  // 5. Every check is successful, allow accesss to protected route
   req.user = user;
 
   next();

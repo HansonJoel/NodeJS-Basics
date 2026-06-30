@@ -10,6 +10,7 @@ const devError = (res, error) => {
   });
 };
 
+// Production Error Handler
 const prodErrors = (res, error) => {
   if (error.isOperational) {
     res.status(error.statusCode).json({
@@ -26,12 +27,14 @@ const prodErrors = (res, error) => {
   }
 };
 
+// Error Handlers for specific error types
 const handleCastError = (error) => {
   const errorMessage = `Invalid value '${error.value}' for property '${error.path}'.`;
   const appError = new AppError(errorMessage, 400);
   return appError;
 };
 
+// Duplicate Key Error Handler
 const duplicateKeyHandler = (error) => {
   const field = Object.keys(error.keyValue)[0];
 
@@ -42,6 +45,7 @@ const duplicateKeyHandler = (error) => {
   return new AppError(errorMessage, 409);
 };
 
+// Validation Error Handler
 const handleValidationError = (error) => {
   const errors = Object.values(error.errors).map((val) => val.message);
   const message = errors.join(". ");
@@ -49,16 +53,19 @@ const handleValidationError = (error) => {
   return new AppError(errorMessage, 400);
 };
 
+// JWT Error Handlers
 const handleJsonWebTokenError = (error) => {
   const errorMessage = "Invalid access token. Please log in again.";
   return new AppError(errorMessage, 401);
 };
 
+// Token Expired Error Handler
 const handleTokenExpiredError = (error) => {
   const errorMessage = "Your access token has expired. Please log in again.";
   return new AppError(errorMessage, 401);
 };
 
+// Global Error Handling Middleware
 module.exports = (error, req, res, next) => {
   error.statusCode = error.statusCode || 500;
   error.status = error.status || "error";
