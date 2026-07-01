@@ -1,0 +1,98 @@
+const AppError = require("../utilities/appError");
+
+// Global Error Handler
+const devError = (res, error) => {
+  res.status(error.statusCode || 500).json({
+    status: error.status || "error",
+    message: error.message,
+    stack: error.stack,
+    error: error,
+  });
+};
+
+// Production Error Handler
+const prodErrors = (res, error) => {
+  if (error.isOperational) {
+    res.status(error.statusCode).json({
+      status: error.status,
+      message: error.message,
+    });
+  } else {
+    console.error("ERROR", error);
+
+    res.status(error.statusCode || 500).json({
+      status: "error",
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+// Error Handlers for specific error types
+const handleCastError = (error) => {
+  const errorMessage = `Invalid value '${error.value}' for property '${error.path}'.`;
+  const appError = new AppError(errorMessage, 400);
+  return appError;
+};
+
+// Duplicate Key Error Handler
+const duplicateKeyHandler = (error) => {
+  const field = Object.keys(error.keyValue)[0];
+
+  const value = error.keyValue[field];
+
+  const errorMessage = `A document with field '${field}' and value '${value}' already exists`;
+
+  return new AppError(errorMessage, 409);
+};
+
+// Validation Error Handler
+const handleValidationError = (error) => {
+  const errors = Object.values(error.errors).map((val) => val.message);
+  const message = errors.join(". ");
+  const errorMessage = `Invalid input data. ${message}`;
+  return new AppError(errorMessage, 400);
+};
+
+// JWT Error Handlers
+const handleJsonWebTokenError = (error) => {
+  const errorMessage = "Invalid access token. Please log in again.";
+  return new AppError(errorMessage, 401);
+};
+
+// Token Expired Error Handler
+const handleTokenExpiredError = (error) => {
+  const errorMessage = "Your access token has expired. Please log in again.";
+  return new AppError(errorMessage, 401);
+};
+
+// Global Error Handling Middleware
+module.exports = (error, req, res, next) => {
+  error.statusCode = error.statusCode || 500;
+  error.status = error.status || "error";
+
+  if (process.env.NODE_ENV === "development") {
+    devError(res, error);
+  } else {
+    let appError = { ...error };
+
+    appError.message = error.message;
+
+    if (error.name === "CastError") {
+      appError = handleCastError(error);
+    }
+    if (error.code === 11000) {
+      appError = duplicateKeyHandler(error);
+    }
+    if (error.name === "ValidationError") {
+      appError = handleValidationError(error);
+    }
+    if (error.name === "JsonWebTokenError") {
+      appError = handleJsonWebTokenError(error);
+    }
+    if (error.name === "TokenExpiredError") {
+      appError = handleTokenExpiredError(error);
+    }
+
+    prodErrors(res, appError);
+  }
+};
