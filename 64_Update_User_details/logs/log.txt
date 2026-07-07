@@ -1,0 +1,4 @@
+Thu May 14 2026 13:54:54 GMT+0100 (West Africa Standard Time): A new Hotel document with name The Test Hotel 3 was created by Joel Hanson
+Thu May 21 2026 14:09:36 GMT+0100 (West Africa Standard Time): A new Hotel document with name The Test Hotel 4 was created by Joel Hanson
+Mon May 25 2026 17:08:58 GMT+0100 (West Africa Standard Time): A new Hotel document with name The Test Hotel 4 was created by Joel Hanson
+Wed May 27 2026 16:02:53 GMT+0100 (West Africa Standard Time): A new Hotel document with name The Test Hotel 5 was created by Joel Hanson
